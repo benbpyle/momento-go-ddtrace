@@ -45,6 +45,13 @@ func NewWrappedCacheClient(token string) (*WrappedCacheClient, error) {
 	return c, nil
 }
 
+func (w *WrappedCacheClient) Increment(ctx context.Context, r *momento.IncrementRequest) (responses.IncrementResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.Increment", opts...)
+	defer span.Finish()
+	return w.client.Increment(ctx, r)
+
+}
+
 func (w *WrappedCacheClient) DictionaryLength(ctx context.Context, r *momento.DictionaryLengthRequest) (responses.DictionaryLengthResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.DictionaryLength", opts...)
 	defer span.Finish()
