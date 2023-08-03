@@ -14,6 +14,7 @@ import (
 
 var opts = []ddtrace.StartSpanOption{
 	tracer.ServiceName("momento"),
+	tracer.ResourceName("momento"),
 }
 
 type WrappedCacheClient struct {
@@ -42,6 +43,12 @@ func NewWrappedCacheClient(token string) (*WrappedCacheClient, error) {
 	}
 
 	return c, nil
+}
+
+func (w *WrappedCacheClient) DictionaryLength(ctx context.Context, r *momento.DictionaryLengthRequest) (responses.DictionaryLengthResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.DictionaryLength", opts...)
+	defer span.Finish()
+	return w.client.DictionaryLength(ctx, r)
 }
 
 func (w *WrappedCacheClient) CreateCache(ctx context.Context, request *momento.CreateCacheRequest) (responses.CreateCacheResponse, error) {
