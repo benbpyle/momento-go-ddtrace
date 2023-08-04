@@ -45,25 +45,13 @@ func NewWrappedCacheClient(token string) (*WrappedCacheClient, error) {
 	return c, nil
 }
 
-func (w *WrappedCacheClient) Increment(ctx context.Context, r *momento.IncrementRequest) (responses.IncrementResponse, error) {
-	span, _ := tracer.StartSpanFromContext(ctx, "momento.Increment", opts...)
-	defer span.Finish()
-	return w.client.Increment(ctx, r)
-
-}
-
-func (w *WrappedCacheClient) DictionaryLength(ctx context.Context, r *momento.DictionaryLengthRequest) (responses.DictionaryLengthResponse, error) {
-	span, _ := tracer.StartSpanFromContext(ctx, "momento.DictionaryLength", opts...)
-	defer span.Finish()
-	return w.client.DictionaryLength(ctx, r)
-}
-
 func (w *WrappedCacheClient) CreateCache(ctx context.Context, request *momento.CreateCacheRequest) (responses.CreateCacheResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.CreateCache", opts...)
 	defer span.Finish()
 	return w.client.CreateCache(ctx, request)
 }
 
+// DeleteCache deletes a cache and all the items within it.
 func (w *WrappedCacheClient) DeleteCache(ctx context.Context, request *momento.DeleteCacheRequest) (responses.DeleteCacheResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.DeleteCache", opts...)
 	defer span.Finish()
@@ -76,18 +64,33 @@ func (w *WrappedCacheClient) ListCaches(ctx context.Context, request *momento.Li
 	return w.client.ListCaches(ctx, request)
 }
 
+// Increment adds an integer quantity to a field value.
+func (w *WrappedCacheClient) Increment(ctx context.Context, r *momento.IncrementRequest) (responses.IncrementResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.Increment", opts...)
+	defer span.Finish()
+	return w.client.Increment(ctx, r)
+}
 func (w *WrappedCacheClient) Set(ctx context.Context, r *momento.SetRequest) (responses.SetResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.Set", opts...)
 	defer span.Finish()
 	return w.client.Set(ctx, r)
 }
 
+// Set sets the value in cache with a given time to live (TTL) if not already present
+func (w *WrappedCacheClient) SetIfNotExists(ctx context.Context, r *momento.SetIfNotExistsRequest) (responses.SetIfNotExistsResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.SetIfNotExists", opts...)
+	defer span.Finish()
+	return w.client.SetIfNotExists(ctx, r)
+}
+
+// Get gets the cache value stored for the given key.
 func (w *WrappedCacheClient) Get(ctx context.Context, r *momento.GetRequest) (responses.GetResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.Get", opts...)
 	defer span.Finish()
 	return w.client.Get(ctx, r)
 }
 
+// Delete removes the key from the cache.
 func (w *WrappedCacheClient) Delete(ctx context.Context, r *momento.DeleteRequest) (responses.DeleteResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.Delete", opts...)
 	defer span.Finish()
@@ -98,6 +101,19 @@ func (w *WrappedCacheClient) KeysExist(ctx context.Context, r *momento.KeysExist
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.KeysExist", opts...)
 	defer span.Finish()
 	return w.client.KeysExist(ctx, r)
+}
+
+func (w *WrappedCacheClient) ItemGetType(ctx context.Context, r *momento.ItemGetTypeRequest) (responses.ItemGetTypeResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.ItemGetType", opts...)
+	defer span.Finish()
+	return w.client.ItemGetType(ctx, r)
+}
+
+func (w *WrappedCacheClient) ItemGetTtl(ctx context.Context, r *momento.ItemGetTtlRequest) (responses.ItemGetTtlResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.ItemGetTtl", opts...)
+	defer span.Finish()
+	return w.client.ItemGetTtl(ctx, r)
+
 }
 
 func (w *WrappedCacheClient) SortedSetFetchByRank(ctx context.Context, r *momento.SortedSetFetchByRankRequest) (responses.SortedSetFetchResponse, error) {
@@ -154,6 +170,19 @@ func (w *WrappedCacheClient) SortedSetGetRank(ctx context.Context, r *momento.So
 	return w.client.SortedSetGetRank(ctx, r)
 }
 
+func (w *WrappedCacheClient) SortedSetLength(ctx context.Context, r *momento.SortedSetLengthRequest) (responses.SortedSetLengthResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.SortedSetLength", opts...)
+	defer span.Finish()
+	return w.client.SortedSetLength(ctx, r)
+}
+
+// SortedSetLengthByScore gets the number of elements in the sorted set by an optional score range.
+func (w *WrappedCacheClient) SortedSetLengthByScore(ctx context.Context, r *momento.SortedSetLengthByScoreRequest) (responses.SortedSetLengthByScoreResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.SortedSetLengthByScore", opts...)
+	defer span.Finish()
+	return w.client.SortedSetLengthByScore(ctx, r)
+}
+
 func (w *WrappedCacheClient) SortedSetIncrementScore(ctx context.Context, r *momento.SortedSetIncrementScoreRequest) (responses.SortedSetIncrementScoreResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.SortedSetIncrementScore", opts...)
 	defer span.Finish()
@@ -176,6 +205,13 @@ func (w *WrappedCacheClient) SetFetch(ctx context.Context, r *momento.SetFetchRe
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.SetFetch", opts...)
 	defer span.Finish()
 	return w.client.SetFetch(ctx, r)
+}
+
+// SetLength gets the number of elements in the set.
+func (w *WrappedCacheClient) SetLength(ctx context.Context, r *momento.SetLengthRequest) (responses.SetLengthResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.SetLength", opts...)
+	defer span.Finish()
+	return w.client.SetLength(ctx, r)
 }
 
 func (w *WrappedCacheClient) SetRemoveElement(ctx context.Context, r *momento.SetRemoveElementRequest) (responses.SetRemoveElementResponse, error) {
@@ -296,6 +332,12 @@ func (w *WrappedCacheClient) DictionaryRemoveFields(ctx context.Context, r *mome
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.DictionaryRemoveFields", opts...)
 	defer span.Finish()
 	return w.client.DictionaryRemoveFields(ctx, r)
+}
+
+func (w *WrappedCacheClient) DictionaryLength(ctx context.Context, r *momento.DictionaryLengthRequest) (responses.DictionaryLengthResponse, error) {
+	span, _ := tracer.StartSpanFromContext(ctx, "momento.DictionaryLength", opts...)
+	defer span.Finish()
+	return w.client.DictionaryLength(ctx, r)
 }
 
 func (w *WrappedCacheClient) UpdateTtl(ctx context.Context, r *momento.UpdateTtlRequest) (responses.UpdateTtlResponse, error) {
