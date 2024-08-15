@@ -23,17 +23,15 @@ type WrappedCacheClient struct {
 
 func NewWrappedCacheClient(token string) (*WrappedCacheClient, error) {
 	credentialProvider, err := auth.FromString(token)
-
 	if err != nil {
 		return nil, err
 	}
 
 	// Initializes Momento
 	client, err := momento.NewCacheClient(
-		config.LaptopLatest(),
+		config.InRegionLatest(),
 		credentialProvider,
 		600*time.Second)
-
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +68,7 @@ func (w *WrappedCacheClient) Increment(ctx context.Context, r *momento.Increment
 	defer span.Finish()
 	return w.client.Increment(ctx, r)
 }
+
 func (w *WrappedCacheClient) Set(ctx context.Context, r *momento.SetRequest) (responses.SetResponse, error) {
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.Set", opts...)
 	defer span.Finish()
@@ -113,7 +112,6 @@ func (w *WrappedCacheClient) ItemGetTtl(ctx context.Context, r *momento.ItemGetT
 	span, _ := tracer.StartSpanFromContext(ctx, "momento.ItemGetTtl", opts...)
 	defer span.Finish()
 	return w.client.ItemGetTtl(ctx, r)
-
 }
 
 func (w *WrappedCacheClient) SortedSetFetchByRank(ctx context.Context, r *momento.SortedSetFetchByRankRequest) (responses.SortedSetFetchResponse, error) {
