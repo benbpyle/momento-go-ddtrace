@@ -28,6 +28,7 @@ func NewWrappedCacheClient(token string) (*WrappedCacheClient, error) {
 	}
 
 	// Initializes Momento
+	// Use InRegionLatest
 	client, err := momento.NewCacheClient(
 		config.InRegionLatest(),
 		credentialProvider,
